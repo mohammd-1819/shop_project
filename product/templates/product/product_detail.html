@@ -1,0 +1,390 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ product.title|title }}
+{% endblock %}
+
+{% block content %}
+    <!--================Home Banner Area =================-->
+    <section class="banner_area">
+        <div class="banner_inner d-flex align-items-center">
+            <div class="container">
+                <div
+                        class="banner_content d-md-flex justify-content-between align-items-center"
+                >
+                    <div class="mb-3 mb-md-0">
+                        <h2>Product Details</h2>
+                    </div>
+                    <div class="page_link">
+                        <a href="{% url 'home:home' %}">Home</a>
+                        <a href="{% url 'product:product-detail' product.id %}">{{ product.title }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Home Banner Area =================-->
+
+    <!--================Single Product Area =================-->
+    <div class="product_image_area">
+        <div class="container">
+            <div class="row s_product_inner">
+                <div class="col-lg-6">
+                    <div class="s_product_img">
+                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img
+                                            class="d-block w-100"
+                                            src="{{ product.image.url }}"
+                                            alt="First slide"
+                                    />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 offset-lg-1">
+                    <div class="s_product_text">
+                        <h3>{{ product.title|title }}</h3>
+                        <h2>${{ product.price }}</h2>
+                        <ul class="list">
+                            <li>
+                                <a class="active">
+                                    <span>Category</span> : {{ product.category.first|title }}</a>
+                            </li>
+                            <li>
+                                {% if product.availibility %}
+                                    <a> <span>Availibility</span> : In Stock</a>
+                                {% else %}
+                                    <a> <span>Availibility</span> : Out Of Stock</a>
+                                {% endif %}
+                            </li>
+                        </ul>
+                        <p>
+                            {{ product.description|truncatewords:30 }}
+                        </p>
+                        <form action="{% url 'cart:cart-add' product.id %}" method="post">
+                            {% csrf_token %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            {% endif %}
+                            <div class="product_count">
+                                <label for="qty">Quantity:</label>
+                                <input
+                                        type="number"
+                                        name="quantity"
+                                        id="sst"
+                                        maxlength="12"
+                                        value="1"
+                                        title="Quantity:"
+                                        class="input-text qty"
+                                        min="0"
+                                />
+                                <button
+                                        onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
+                                        class="increase items-count"
+                                        type="button"
+                                >
+                                    <i class="lnr lnr-chevron-up"></i>
+                                </button>
+                                <button
+                                        onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
+                                        class="reduced items-count"
+                                        type="button"
+                                >
+                                    <i class="lnr lnr-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div class="mb-4">
+                                {% if product.has_color %}
+                                    {% if product.color.all %}
+                                        {% for color in product.color.all %}
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" class="custom-control-input"
+                                                       value="{{ color.title }}"
+                                                       id="{{ color.title }}" name="color">
+                                                <label class="custom-control-label"
+                                                       for="{{ color.title }}">{{ color.title }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-4">
+                                {% if product.has_size %}
+                                    {% if product.size.all %}
+                                        {% for size in product.size.all %}
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" class="custom-control-input"
+                                                       value="{{ size.title }}"
+                                                       id="{{ size.title }}" name="size">
+                                                <label class="custom-control-label"
+                                                       for="{{ size.title }}">{{ size.title }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+
+                            <div class="card_area">
+                                <button type="submit" class="main_btn" href="#">Add to Cart</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--================End Single Product Area =================-->
+
+    <!--================Product Description Area =================-->
+    <section class="product_description_area">
+        <div class="container">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a
+                            class="nav-link"
+                            id="home-tab"
+                            data-toggle="tab"
+                            href="#home"
+                            role="tab"
+                            aria-controls="home"
+                            aria-selected="true"
+                    >Description</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                            class="nav-link"
+                            id="contact-tab"
+                            data-toggle="tab"
+                            href="#contact"
+                            role="tab"
+                            aria-controls="contact"
+                            aria-selected="false"
+                    >Comments</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                            class="nav-link active"
+                            id="review-tab"
+                            data-toggle="tab"
+                            href="#review"
+                            role="tab"
+                            aria-controls="review"
+                            aria-selected="false"
+                    >Reviews</a
+                    >
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div
+                        class="tab-pane fade"
+                        id="home"
+                        role="tabpanel"
+                        aria-labelledby="home-tab"
+                >
+                    <p>{{ product.description }}</p>
+                </div>
+                <div
+                        class="tab-pane fade"
+                        id="profile"
+                        role="tabpanel"
+                        aria-labelledby="profile-tab"
+                >
+                </div>
+                <div
+                        class="tab-pane fade"
+                        id="contact"
+                        role="tabpanel"
+                        aria-labelledby="contact-tab"
+                >
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="comment_list">
+                                {% if product.comments.all %}
+                                    {% for comment in product.comments.all %}
+                                        {% if comment.parent == None %}
+                                            <div class="review_item">
+                                                <div class="media">
+
+                                                    <div class="media-body">
+                                                        <h4>{{ comment.user.username }}</h4>
+                                                        <h5>{{ comment.created_at }}</h5>
+                                                        <button class="reply_btn" onclick="set_value({{ comment.id }})">
+                                                            Reply
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <p>
+                                                    {{ comment.text }}
+                                                </p>
+                                            </div>
+                                            {% for reply in comment.replies.all %}
+                                                <div class="review_item reply">
+                                                    <div class="media">
+                                                        <div class="media-body">
+                                                            <h4>{{ reply.user.username }}</h4>
+                                                            <h5>{{ reply.created_at }}</h5>
+                                                        </div>
+                                                    </div>
+                                                    <p>
+                                                        {{ reply.text }}
+                                                    </p>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <h4>No Comments</h4>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="review_box">
+                                <h4>Post a comment</h4>
+                                {% if request.user.is_authenticated %}
+                                    <form
+                                            class="row contact_form"
+                                            method="post"
+                                            id="contactForm"
+                                            novalidate="novalidate"
+                                    >
+                                        {% csrf_token %}
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                        <textarea
+                                class="form-control"
+                                name="message"
+                                id="message"
+                                rows="1"
+                                placeholder="Message"
+                        ></textarea>
+                                                <input type="hidden" name="parent_id" id="parent_id">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 text-right">
+                                            <button
+                                                    type="submit"
+                                                    class="btn submit_btn"
+                                            >
+                                                Send
+                                            </button>
+                                        </div>
+                                    </form>
+                                {% else %}
+                                    <p><a href="{% url 'account:login' %}">Login</a> to post comments</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                        class="tab-pane fade show active"
+                        id="review"
+                        role="tabpanel"
+                        aria-labelledby="review-tab"
+                >
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row total_rate">
+                                <div class="col-6">
+                                </div>
+                                <div class="col-6">
+                                </div>
+                            </div>
+                            <div class="review_list">
+                                {% if product.reviews.all %}
+                                    {% for review in product.reviews.all %}
+                                        <div class="review_item">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <h4>{{ review.user.username }}</h4>
+                                                </div>
+                                            </div>
+                                            <p>
+                                                {{ review.text }}
+                                            </p>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <h4>No Reviews</h4>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="review_box">
+                                <h4>Add a Review</h4>
+                                {% if request.user.is_authenticated %}
+                                    <form
+                                            class="row contact_form"
+                                            method="post"
+                                            id="contactForm"
+                                            novalidate="novalidate"
+                                    >
+                                        {% csrf_token %}
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                        <textarea
+                                class="form-control"
+                                name="review"
+                                id="message"
+                                rows="1"
+                                placeholder="Review"
+                        ></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 text-right">
+                                            <button
+                                                    type="submit"
+                                                    class="btn submit_btn"
+                                            >
+                                                Send
+                                            </button>
+                                        </div>
+                                    </form>
+                                {% else %}
+                                    <p><a href="{% url 'account:login' %}">Login</a> to add a review</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Product Description Area =================-->
+
+    <script>
+        document.getElementById('sst').addEventListener('input', function () {
+            const qtyInput = this;
+            if (qtyInput.value < 1) {
+                qtyInput.value = 1;
+            }
+        });
+    </script>
+
+    <script>
+        function set_value(id) {
+            document.getElementById('parent_id').value = id;
+            window.location.href = '#body'
+            var textarea = document.getElementById('message');
+            textarea.focus();
+
+        }
+
+
+    </script>
+
+
+{% endblock %}

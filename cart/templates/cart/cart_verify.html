@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block content %}
+    <!-- Cart Start -->
+    <div class="container-fluid py-5 ">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+                <h4>Payment has been made successfully</h4>
+                <a href="{% url 'home:home' %}">return to main page</a>
+            </div>
+            <div class="col-lg-4">
+            </div>
+        </div>
+    </div>
+    <!-- Cart End -->
+{% endblock %}

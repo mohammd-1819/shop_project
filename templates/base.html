@@ -1,0 +1,29 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include 'includes/head_links.html' %}
+</head>
+
+<body>
+<!--================Header Menu Area =================-->
+{% include 'includes/header.html' %}
+<!--================Header Menu Area =================-->
+
+{% block content %}
+
+{% endblock %}
+
+
+<!--================ start footer Area  =================-->
+{% include 'includes/footer.html' %}
+<!--================ End footer Area  =================-->
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+{% include 'includes/scripts.html' %}
+</body>
+
+</html>

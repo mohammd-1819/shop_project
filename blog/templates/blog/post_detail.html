@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load social_share %}
+
+{% block title %}
+    {{ post.title|title }}
+{% endblock %}
+
+{% block content %}
+    <!--================Home Banner Area =================-->
+    <section class="banner_area">
+        <div class="banner_inner d-flex align-items-center">
+            <div class="container">
+                <div
+                        class="banner_content d-md-flex justify-content-between align-items-center"
+                >
+                    <div class="mb-3 mb-md-0">
+                        <h2>Blog Post Detail</h2>
+                    </div>
+                    <div class="page_link">
+                        <a href="{% url 'home:home' %}">Home</a>
+                        <a href="{% url 'blog:post-list' %}">Blog </a>
+                        <a href="{% url 'blog:post-detail' post.id %}">{{ post.title }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Home Banner Area =================-->
+
+    <!--================Blog Area =================-->
+    <section class="blog_area single-post-area section_gap">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 posts-list">
+                    <div class="single-post">
+                        <div class="feature-img">
+                            <img class="img-fluid" src="{{ post.image.url }}" alt="{{ post.title }}">
+                        </div>
+                        <div class="blog_details">
+                            <h2>{{ post.title|title }}</h2>
+                            <ul class="blog-info-link mt-3 mb-4">
+                                <li><a href="#"><i class="ti-user"></i>{{ post.category.all.first }}</a></li>
+                                <li><a href="#"><i class="ti-comments"></i> 03 Comments</a></li>
+                            </ul>
+                            <p class="excert">{{ post.text }}</p>
+
+
+                        </div>
+                    </div>
+                    <div class="navigation-top">
+                        <div class="d-sm-flex justify-content-between text-center">
+                            <div class="col-sm-4 text-center my-2 my-sm-0">
+                                <p class="comment-count"><span class="align-middle"><i
+                                        class="ti-comment"></i></span> {{ post.blog_comments.all.count }}
+                                    Comments</p>
+                            </div>
+                            <ul class="social-icons">
+                                <li class="text-info">{% post_to_whatsapp post.get_absolute_url link_text='whatsapp' %}</li>
+                                <li>{% post_to_telegram post.get_absolute_url link_text='telegram' %}</li>
+
+                            </ul>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="comments-area">
+                        <h4>{{ post.blog_comments.all.count }} Comments</h4>
+                        {% if post.blog_comments.all %}
+                            {% for comment in post.blog_comments.all %}
+                                {% if comment.parent == None %}
+                                    <div class="comment-list">
+                                        <div class="single-comment justify-content-between d-flex">
+                                            <div class="user justify-content-between d-flex">
+                                                <div class="thumb">
+
+                                                </div>
+                                                <div class="desc">
+                                                    <p class="comment">
+                                                        {{ comment.text }}
+                                                    </p>
+
+                                                    <div class="d-flex justify-content-between">
+                                                        <div class="d-flex align-items-center">
+                                                            <h5>
+                                                                <a href="#">{{ comment.user.username }}</a>
+                                                            </h5>
+                                                            <p class="date">{{ comment.created_at }}</p>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <h4>No Comments</h4>
+                        {% endif %}
+                    </div>
+                    <div class="comment-form">
+                        <h4>Leave a Comment</h4>
+                        {% if request.user.is_authenticated %}
+                            <form class="form-contact comment_form" method="post" id="commentForm">
+                                {% csrf_token %}
+                                <div class="row">
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                        <textarea class="form-control w-100" name="comment" id="comment" cols="30"
+                                                  rows="9" placeholder="Write a Comment"></textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="main_btn">Send Message</button>
+                                </div>
+                            </form>
+                        {% else %}
+                            <p><a href="{% url 'account:login' %}">Login</a> to leave a comment</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    {% include 'includes/blog_sidebar.html' %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================Blog Area =================-->
+{% endblock %}

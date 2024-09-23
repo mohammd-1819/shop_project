@@ -1,0 +1,50 @@
+<div class="blog_right_sidebar">
+    <aside class="single_sidebar_widget search_widget">
+        <form name="gs" action="{% url 'blog:blog-search' %}" method="GET">
+
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <input type="text" value="{{ request.GET.q }}" name="q" class="form-control"
+                           placeholder="Search Keyword">
+                    <div class="input-group-append">
+                        <button class="btn" type="button"><i class="ti-search"></i></button>
+                    </div>
+                </div>
+
+            </div>
+            <button class="main_btn rounded-0 w-100" type="submit">Search</button>
+        </form>
+    </aside>
+
+    <aside class="single_sidebar_widget post_category_widget">
+        <h4 class="widget_title">Category</h4>
+        <ul class="list cat-list">
+            {% for category in categories %}
+                <li>
+                    <a href="{% url 'blog:category-detail'  category.id %}" class="d-flex">
+                        <p>{{ category.title }} </p>
+                        <span><p>({{ category.posts.count }})</p></span>
+                    </a>
+                </li>
+            {% endfor %}
+
+        </ul>
+    </aside>
+
+    <aside class="single_sidebar_widget popular_post_widget">
+        <h3 class="widget_title">Recent Post</h3>
+        {% for post in recent_posts %}
+            <div class="media post_item">
+                <img style="width: 70px; height: 50px" src="{{ post.image.url }}" alt="{{ post.title }}">
+                <div class="media-body">
+                    <a href="{% url 'blog:post-detail' post.id %}">
+                        <h3>{{ post.title|title }}</h3>
+                    </a>
+                    <p>{{ post.created_at|date:'F' }} {{ post.created_at.day }}, {{ post.created_at.year }}</p>
+                </div>
+            </div>
+        {% endfor %}
+
+    </aside>
+
+</div>
